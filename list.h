@@ -25,12 +25,14 @@ buffer *init_free_list(buffer *BUFFER_CACHE, int BUFFER_COUNT)
 	BUFFER_CACHE[0]->prev_Free_List = dummy_head;
 	BUFFER_CACHE[0]->next_Free_List = BUFFER_CACHE[1];	
 
+	BUFFER_CACHE[BUFFER_COUNT-1]->next_Free_List = dummy_head;
+	BUFFER_CACHE[BUFFER_COUNT-1]->prev_Free_List = BUFFER_CACHE [BUFFER_COUNT-2];
+
 	for(int i = 1 ; i < BUFFER_COUNT - 1 ; i++)
 	{
 		BUFFER_CACHE[i]->next_Free_List = BUFFER_CACHE[i+1];
 		BUFFER_CACHE[i]->prev_Free_List = BUFFER_CACHE[i-1];	
 	}
-	
 	return dummy_head;
 }
 
