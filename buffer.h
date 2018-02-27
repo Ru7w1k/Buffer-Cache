@@ -11,10 +11,10 @@ typedef struct buffer
 
 	unsigned char data[1024];
 	
-	buffer *prev_Hash_Queue;
-	buffer *next_Hash_Queue;
-	buffer *prev_Free_List;
-	buffer *next_Free_List;
+	struct buffer *prev_Hash_Queue;
+	struct buffer *next_Hash_Queue;
+	struct buffer *prev_Free_List;
+	struct buffer *next_Free_List;
 } buffer;
 
 #endif

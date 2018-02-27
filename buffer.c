@@ -21,7 +21,7 @@ int main (int argc, char **argv)
 {
 	buffer *FREE_LIST = init_free_list(BUFFER_CACHE, BUFFER_COUNT);
 	print_list(FREE_LIST);
-	getch();
+	printf("--done--");
 	return 0;	
 }
 

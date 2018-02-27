@@ -19,19 +19,25 @@ buffer *init_free_list(buffer *BUFFER_CACHE, int BUFFER_COUNT)
 	dummy_head->status = 255;
 	
 	/* link first and last buffer to dummy_head */
-	dummy_head->next_Free_List = BUFFER_CACHE[0];
-	dummy_head->prev_Free_List = BUFFER_CACHE[BUFFER_COUNT-1];
+	dummy_head->next_Free_List = &BUFFER_CACHE[0];
+	dummy_head->prev_Free_List = &BUFFER_CACHE[BUFFER_COUNT-1];
 
-	BUFFER_CACHE[0]->prev_Free_List = dummy_head;
-	BUFFER_CACHE[0]->next_Free_List = BUFFER_CACHE[1];	
+    /* connect all links of 1st buffer */
+	BUFFER_CACHE[0].prev_Free_List = dummy_head;
+	BUFFER_CACHE[0].next_Free_List = &BUFFER_CACHE[1];	
+	BUFFER_CACHE[0].logical_block_number = 0;
 
-	BUFFER_CACHE[BUFFER_COUNT-1]->next_Free_List = dummy_head;
-	BUFFER_CACHE[BUFFER_COUNT-1]->prev_Free_List = BUFFER_CACHE [BUFFER_COUNT-2];
-
+    /* connect all links of last buffer */
+	BUFFER_CACHE[BUFFER_COUNT-1].next_Free_List = dummy_head;
+	BUFFER_CACHE[BUFFER_COUNT-1].prev_Free_List = &BUFFER_CACHE [BUFFER_COUNT-2];
+	BUFFER_CACHE[BUFFER_COUNT-1].logical_block_number = BUFFER_COUNT-1;
+    
+    /* connect all links of intermediate buffers */
 	for(int i = 1 ; i < BUFFER_COUNT - 1 ; i++)
 	{
-		BUFFER_CACHE[i]->next_Free_List = BUFFER_CACHE[i+1];
-		BUFFER_CACHE[i]->prev_Free_List = BUFFER_CACHE[i-1];	
+		BUFFER_CACHE[i].next_Free_List = &BUFFER_CACHE[i+1];
+		BUFFER_CACHE[i].prev_Free_List = &BUFFER_CACHE[i-1];
+		BUFFER_CACHE[i].logical_block_number = i;
 	}
 	return dummy_head;
 }
@@ -40,7 +46,7 @@ void insert_head_free_list(buffer *head, buffer *node)
 {
 	node->next_Free_List = head->next_Free_List;
 	node->prev_Free_List = head;
-	head->next_Free_List->prev_FreeList = node;
+	head->next_Free_List->prev_Free_List = node;
 	head->next_Free_List = node;
 }
 
@@ -55,10 +61,10 @@ void insert_end_free_list(buffer *head, buffer *node)
 void print_list (buffer *head)
 {
 	buffer *ptr = head;
-	while(ptr->status != 255)
+	while(ptr->next_Free_List->status != 255)
 	{
-		printf("%u:%u %s", head->logical_device_number, head->logical_block_number, head->data);
-		ptr = ptr->next_Free_List;
+	    ptr = ptr->next_Free_List;
+		printf("%d:%d %s \n", ptr->logical_device_number, ptr->logical_block_number, ptr->data);		
 	}
 }
 
