@@ -13,23 +13,26 @@
  */
 void __init_hash_queue(buffer *BUFFER_CACHE, buffer *header, int HASH_QUEUE_INDEX, int HASH_QUEUE_SIZE, int HASH_QUEUE_COUNT)
 {
+    /* set status to 255 */
+    header->status = 255;
+
     /* Assign both pointers of dummy header */
-    header->next_Hash_Queue = BUFFER_CACHE[(HASH_QUEUE_COUNT * 0) + HASH_QUEUE_INDEX];
-    header->prev_Hash_Queue = BUFFER_CACHE[(HASH_QUEUE_COUNT * (HASH_QUEUE_SIZE-1)) + HASH_QUEUE_INDEX]
+    header->next_Hash_Queue = &BUFFER_CACHE[(HASH_QUEUE_COUNT * 0) + HASH_QUEUE_INDEX];
+    header->prev_Hash_Queue = &BUFFER_CACHE[(HASH_QUEUE_COUNT * (HASH_QUEUE_SIZE-1)) + HASH_QUEUE_INDEX];
     
     /* manually handle first buffer's pointers */ 
-    BUFFER_CACHE[(HASH_QUEUE_COUNT * 0) + HASH_QUEUE_INDEX]->prev_Hash_Queue = header;
-    BUFFER_CACHE[(HASH_QUEUE_COUNT * 0) + HASH_QUEUE_INDEX]->next_Hash_Queue = BUFFER_CACHE[(HASH_QUEUE_COUNT * 1) + HASH_QUEUE_INDEX];
+    BUFFER_CACHE[(HASH_QUEUE_COUNT * 0) + HASH_QUEUE_INDEX].prev_Hash_Queue = header;
+    BUFFER_CACHE[(HASH_QUEUE_COUNT * 0) + HASH_QUEUE_INDEX].next_Hash_Queue = &BUFFER_CACHE[(HASH_QUEUE_COUNT * 1) + HASH_QUEUE_INDEX];
     
     /* manually handle last buffer's pointers */ 
-    BUFFER_CACHE[(HASH_QUEUE_COUNT * (HASH_QUEUE_SIZE-1)) + HASH_QUEUE_INDEX]->prev_Hash_Queue = BUFFER_CACHE[(HASH_QUEUE_COUNT * (HASH_QUEUE_SIZE-2)) + HASH_QUEUE_INDEX];
-    BUFFER_CACHE[(HASH_QUEUE_COUNT * (HASH_QUEUE_SIZE-1)) + HASH_QUEUE_INDEX]->next_Hash_Queue = header;
+    BUFFER_CACHE[(HASH_QUEUE_COUNT * (HASH_QUEUE_SIZE-1)) + HASH_QUEUE_INDEX].prev_Hash_Queue = &BUFFER_CACHE[(HASH_QUEUE_COUNT * (HASH_QUEUE_SIZE-2)) + HASH_QUEUE_INDEX];
+    BUFFER_CACHE[(HASH_QUEUE_COUNT * (HASH_QUEUE_SIZE-1)) + HASH_QUEUE_INDEX].next_Hash_Queue = header;
 
     /* middle buffers are connected using loop */
     for(int i = 1; i < HASH_QUEUE_SIZE - 1; i++)
     {
-        BUFFER_CACHE[(HASH_QUEUE_COUNT * i) + HASH_QUEUE_INDEX]->next_Hash_Queue = BUFFER_CACHE[(HASH_QUEUE_COUNT * (i+1)) + HASH_QUEUE_INDEX];
-        BUFFER_CACHE[(HASH_QUEUE_COUNT * i) + HASH_QUEUE_INDEX]->prev_Hash_Queue = BUFFER_CACHE[(HASH_QUEUE_COUNT * (i-1)) + HASH_QUEUE_INDEX];
+        BUFFER_CACHE[(HASH_QUEUE_COUNT * i) + HASH_QUEUE_INDEX].next_Hash_Queue = &BUFFER_CACHE[(HASH_QUEUE_COUNT * (i+1)) + HASH_QUEUE_INDEX];
+        BUFFER_CACHE[(HASH_QUEUE_COUNT * i) + HASH_QUEUE_INDEX].prev_Hash_Queue = &BUFFER_CACHE[(HASH_QUEUE_COUNT * (i-1)) + HASH_QUEUE_INDEX];
     }
    
 }
@@ -47,16 +50,16 @@ buffer *init_hash_queue(buffer *BUFFER_CACHE, int BUFFER_COUNT, int HASH_QUEUE_C
     
 	/* create a dummy header with status 255 for list of hash queue headers */
 	buffer *dummy_head = (buffer *) malloc(sizeof(buffer) * HASH_QUEUE_COUNT);
-	dummy_head->status = 255;
 
     for(i = 0; i < HASH_QUEUE_COUNT; i++)
     {
-        __init_hash_queue(BUFFER_CACHE, dummy_head[i], i, HASH_QUEUE_SIZE, HASH_QUEUE_COUNT);
+        __init_hash_queue(BUFFER_CACHE, &dummy_head[i], i, HASH_QUEUE_SIZE, HASH_QUEUE_COUNT);
     }
 
 	return dummy_head;
 }
 
+/*
 void insert_head_free_list(buffer *head, buffer *node)
 {
 	node->next_Free_List = head->next_Free_List;
@@ -72,13 +75,14 @@ void insert_end_free_list(buffer *head, buffer *node)
 	head->prev_Free_List->next_Free_List = node;
 	head->prev_Free_List = node;
 }
+*/
 
-void print_list (buffer *head)
+void print_hash_queue (buffer *head)
 {
 	buffer *ptr = head;
-	while(ptr->next_Free_List->status != 255)
+	while(ptr->next_Hash_Queue->status != 255)
 	{
-	    ptr = ptr->next_Free_List;
+	    ptr = ptr->next_Hash_Queue;
 		printf("%d:%d %s \n", ptr->logical_device_number, ptr->logical_block_number, ptr->data);		
 	}
 }

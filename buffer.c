@@ -30,7 +30,8 @@ int main (int argc, char **argv)
 	HASH_QUEUE = init_hash_queue (BUFFER_CACHE, BUFFER_COUNT, HASH_QUEUE_COUNT);
 	
 	//print_list(FREE_LIST);
-	print_list(HASH_QUEUE[0]);
+	print_hash_queue(&HASH_QUEUE[0]);
+	print_hash_queue(&HASH_QUEUE[1]);
 	
 	printf("\n--done--");
 	return 0;	

@@ -59,7 +59,7 @@ void insert_end_free_list(buffer *head, buffer *node)
 	head->prev_Free_List = node;
 }
 
-void print_list (buffer *head)
+void print_free_list (buffer *head)
 {
 	buffer *ptr = head;
 	while(ptr->next_Free_List->status != 255)
