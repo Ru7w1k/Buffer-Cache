@@ -29,7 +29,8 @@ int main (int argc, char **argv)
 	FREE_LIST  = init_free_list  (BUFFER_CACHE, BUFFER_COUNT);
 	HASH_QUEUE = init_hash_queue (BUFFER_CACHE, BUFFER_COUNT, HASH_QUEUE_COUNT);
 	
-	print_list(FREE_LIST);
+	//print_list(FREE_LIST);
+	print_list(HASH_QUEUE[0]);
 	
 	printf("\n--done--");
 	return 0;	

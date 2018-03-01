@@ -11,9 +11,27 @@
  *  input2 : pointer to DUMMY HEADER of HASH QUEUE,
  *  output : dummy header node for hash queue
  */
-buffer *__init_hash_queue(buffer *BUFFER_CACHE, buffer *header)
+void __init_hash_queue(buffer *BUFFER_CACHE, buffer *header, int HASH_QUEUE_INDEX, int HASH_QUEUE_SIZE, int HASH_QUEUE_COUNT)
 {
-    header->next_Hash_Queue = 
+    /* Assign both pointers of dummy header */
+    header->next_Hash_Queue = BUFFER_CACHE[(HASH_QUEUE_COUNT * 0) + HASH_QUEUE_INDEX];
+    header->prev_Hash_Queue = BUFFER_CACHE[(HASH_QUEUE_COUNT * (HASH_QUEUE_SIZE-1)) + HASH_QUEUE_INDEX]
+    
+    /* manually handle first buffer's pointers */ 
+    BUFFER_CACHE[(HASH_QUEUE_COUNT * 0) + HASH_QUEUE_INDEX]->prev_Hash_Queue = header;
+    BUFFER_CACHE[(HASH_QUEUE_COUNT * 0) + HASH_QUEUE_INDEX]->next_Hash_Queue = BUFFER_CACHE[(HASH_QUEUE_COUNT * 1) + HASH_QUEUE_INDEX];
+    
+    /* manually handle last buffer's pointers */ 
+    BUFFER_CACHE[(HASH_QUEUE_COUNT * (HASH_QUEUE_SIZE-1)) + HASH_QUEUE_INDEX]->prev_Hash_Queue = BUFFER_CACHE[(HASH_QUEUE_COUNT * (HASH_QUEUE_SIZE-2)) + HASH_QUEUE_INDEX];
+    BUFFER_CACHE[(HASH_QUEUE_COUNT * (HASH_QUEUE_SIZE-1)) + HASH_QUEUE_INDEX]->next_Hash_Queue = header;
+
+    /* middle buffers are connected using loop */
+    for(int i = 1; i < HASH_QUEUE_SIZE - 1; i++)
+    {
+        BUFFER_CACHE[(HASH_QUEUE_COUNT * i) + HASH_QUEUE_INDEX]->next_Hash_Queue = BUFFER_CACHE[(HASH_QUEUE_COUNT * (i+1)) + HASH_QUEUE_INDEX];
+        BUFFER_CACHE[(HASH_QUEUE_COUNT * i) + HASH_QUEUE_INDEX]->prev_Hash_Queue = BUFFER_CACHE[(HASH_QUEUE_COUNT * (i-1)) + HASH_QUEUE_INDEX];
+    }
+   
 }
 
 
@@ -33,9 +51,8 @@ buffer *init_hash_queue(buffer *BUFFER_CACHE, int BUFFER_COUNT, int HASH_QUEUE_C
 
     for(i = 0; i < HASH_QUEUE_COUNT; i++)
     {
-        __init_hash_queue(BUFFER_CACHE, dummy_head[i]);
+        __init_hash_queue(BUFFER_CACHE, dummy_head[i], i, HASH_QUEUE_SIZE, HASH_QUEUE_COUNT);
     }
-
 
 	return dummy_head;
 }
