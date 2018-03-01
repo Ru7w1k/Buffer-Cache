@@ -1,10 +1,10 @@
-/* Doubly Circular Link List to manage free list and hash queues of buffers in buffer cache */
+/* Doubly Circular Link List to manage free list of buffers in buffer cache */
 
 #include "buffer.h"
 #include <stdlib.h>
 
-#ifndef LIST_H
-#define LIST_H
+#ifndef FREE_LIST_H
+#define FREE_LIST_H
 
 /* Initialize a free list of buffers with all available buffers in free list attached in sequence. 
 *  input1 : pointer to BUFFER_CACHE, 
@@ -13,6 +13,7 @@
 */
 buffer *init_free_list(buffer *BUFFER_CACHE, int BUFFER_COUNT)
 {
+    int i = 0;
 
 	/* create a dummy header with status 255 */
 	buffer *dummy_head = (buffer *) malloc(sizeof(buffer));
@@ -33,7 +34,7 @@ buffer *init_free_list(buffer *BUFFER_CACHE, int BUFFER_COUNT)
 	BUFFER_CACHE[BUFFER_COUNT-1].logical_block_number = BUFFER_COUNT-1;
     
     /* connect all links of intermediate buffers */
-	for(int i = 1 ; i < BUFFER_COUNT - 1 ; i++)
+	for(i = 1 ; i < BUFFER_COUNT - 1 ; i++)
 	{
 		BUFFER_CACHE[i].next_Free_List = &BUFFER_CACHE[i+1];
 		BUFFER_CACHE[i].prev_Free_List = &BUFFER_CACHE[i-1];

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "buffer.h"
-#include "list.h"
+#include "free-list.h"
+#include "hash-queue.h"
 
 /* Mock the Hard disk size */
 #define HARD_DISK_SIZE 1024 * 1000 * 10
@@ -17,11 +18,20 @@ unsigned char HARD_DISK[HARD_DISK_SIZE];
 /* The Buffer Cache */
 buffer BUFFER_CACHE[BUFFER_COUNT];
 
+/* Free List Header */
+buffer *FREE_LIST;
+
+/* Hash Queue Headers Array */
+buffer *HASH_QUEUE;
+
 int main (int argc, char **argv)
 {
-	buffer *FREE_LIST = init_free_list(BUFFER_CACHE, BUFFER_COUNT);
+	FREE_LIST  = init_free_list  (BUFFER_CACHE, BUFFER_COUNT);
+	HASH_QUEUE = init_hash_queue (BUFFER_CACHE, BUFFER_COUNT, HASH_QUEUE_COUNT);
+	
 	print_list(FREE_LIST);
-	printf("--done--");
+	
+	printf("\n--done--");
 	return 0;	
 }
 
