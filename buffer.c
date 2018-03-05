@@ -26,12 +26,25 @@ buffer *HASH_QUEUE;
 
 int main (int argc, char **argv)
 {
+    // function declarations 
+    buffer *getblk(unsigned int file_system_number, unsigned int block_number);
+    void brelse(buffer *block);
+    buffer *bread (unsigned int file_system_number, unsigned int block_number);
+    buffer *breada(unsigned int file_system_number, unsigned int block_number, unsigned int afile_system_number, unsigned int ablock_number);
+    void bwrite(buffer *block);
+
+    // code 
+    
 	FREE_LIST  = init_free_list  (BUFFER_CACHE, BUFFER_COUNT);
 	HASH_QUEUE = init_hash_queue (BUFFER_CACHE, BUFFER_COUNT, HASH_QUEUE_COUNT);
 	
-	//print_list(FREE_LIST);
+	/* CHECK LISTS ARE CREATED AS REQUIRED 
+	
+	print_list(FREE_LIST);
 	print_hash_queue(&HASH_QUEUE[0]);
 	print_hash_queue(&HASH_QUEUE[1]);
+	
+	**************************************/
 	
 	printf("\n--done--");
 	return 0;	
