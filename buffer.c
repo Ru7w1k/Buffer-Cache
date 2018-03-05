@@ -50,3 +50,17 @@ int main (int argc, char **argv)
 	return 0;	
 }
 
+/******************** ALGORITHMS ********************/
+
+/*
+ * getblk - get a free buffer from buffer cache 
+ * input1 - logical device number / file system number
+ * input2 - logical block number
+ * output - locked buffer
+ */
+buffer *getblk(unsigned int file_system_number, unsigned int block_number)
+{
+
+}
+
+
