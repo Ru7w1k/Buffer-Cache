@@ -67,7 +67,7 @@ void remove_free_list(buffer *node)
     /* if dummy header is passed, do nothing! */
     if(node->status & BF_DUMMY) return;
 
-    node->status = status | BF_LOCKED;
+    node->status |= BF_LOCKED;
 
     node->next_Free_List->prev_Free_List = node->prev_Free_List;
     node->prev_Free_List->next_Free_List = node->next_Free_List;    

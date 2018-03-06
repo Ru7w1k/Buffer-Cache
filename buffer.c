@@ -110,7 +110,7 @@ buffer *getblk(unsigned int file_system_number, unsigned int block_number)
                 continue;
             }
             
-            blk = get_free_list(FREE_LIST);
+            blk = get_free_buffer(FREE_LIST);
             if(blk->status & BF_DWRITE) /* scenario 3 */
             {
                 /* ASYNC bwrite() */
