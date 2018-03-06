@@ -44,11 +44,18 @@ int main (int argc, char **argv)
 	print_hash_queue(&HASH_QUEUE[0]);
 	print_hash_queue(&HASH_QUEUE[1]);
 	
-	//**************************************/
+	/* Hash Function 
 	
 	printf("Hash Queue for block 2014: %d \n", hash(0, 2014));
 	printf("Hash Queue for block    0: %d \n", hash(0, 0));
 	printf("Hash Queue for block 2021: %d \n", hash(0, 2021));		
+	
+	******************************************************************/
+	
+	print_free_list(FREE_LIST);
+	remove_free_list(FREE_LIST);
+	remove_free_list(FREE_LIST->next_Free_List);
+	print_free_list(FREE_LIST);
 	
 	printf("\n -- done -- ");
 	return 0;	
@@ -64,7 +71,57 @@ int main (int argc, char **argv)
  */
 buffer *getblk(unsigned int file_system_number, unsigned int block_number)
 {
+    buffer *blk = NULL;
+    int onHashQueue = 0;
+    int hash_queue_index = hash(file_system_number, block_number);
     
+    while(!blk) /* while buffer not found */
+    {
+        /* scan hash queue for required block */
+        buffer *ptr = HASH_QUEUE[hash_queue_index].next_Hash_Queue;
+        while(ptr->status != BF_DUMMY)
+        {
+            if(ptr->logical_block_number == block_number)
+            {
+                onHashQueue = 1;   
+                break;
+            }
+            ptr = ptr->next_Hash_Queue;
+        }
+        
+        if(onHashQueue) /* block in hash queue */
+        {
+            if(ptr->status & BF_LOCKED) /* scenario 5 */
+            {
+                /* sleep (event: buffer becomes free) */
+                continue;
+            }
+            
+            ptr->status |= BF_LOCKED; /* scenario 1 */
+            remove_free_list(ptr);
+            return ptr;            
+        }
+        
+        else /* block not on hash queue */
+        {
+            if(FREE_LIST->next_Free_List->status & BF_DUMMY) /* scenario 4 */
+            {
+                /* sleep (event: any buffer becomes free) */
+                continue;
+            }
+            
+            blk = get_free_list(FREE_LIST);
+            if(blk->status & BF_DWRITE) /* scenario 3 */
+            {
+                /* ASYNC bwrite() */
+                continue;
+            }
+            
+            /* scenario 2 */
+            set_hash_queue(blk, HASH_QUEUE);
+            return(blk);
+        }        
+    }
 }
 
 

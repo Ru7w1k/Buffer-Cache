@@ -84,15 +84,28 @@ void insert_head_free_list(buffer *head, buffer *node)
 	head->next_Free_List->prev_Free_List = node;
 	head->next_Free_List = node;
 }
-
-void insert_end_free_list(buffer *head, buffer *node)
+ 
+ */
+ 
+void insert_end_hash_queue(buffer *head, buffer *node)
 {
-	node->next_Free_List = head;
-	node->prev_Free_List = head->prev_Free_List;
-	head->prev_Free_List->next_Free_List = node;
-	head->prev_Free_List = node;
+	node->next_Hash_Queue = head;
+	node->prev_Hash_Queue = head->prev_Hash_Queue;
+	head->prev_Hash_Queue->next_Hash_Queue = node;
+	head->prev_Hash_Queue = node;
 }
-*/
+
+
+/*
+ * Remove blk from its hash queue and put it in header hash queue
+ * input1 : block to shift
+ * input2 : header of destination hash queue
+ */
+void set_hash_queue(buffer *blk, buffer *HASH_QUEUE)
+{
+    int hash_queue = hash(blk->logical_device_number, blk->logical_block_number);
+    insert_end_hash_queue(&HASH_QUEUE[hash_queue], blk);
+}
 
 void print_hash_queue (buffer *head)
 {

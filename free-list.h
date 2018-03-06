@@ -15,7 +15,7 @@ buffer *init_free_list(buffer *BUFFER_CACHE, int BUFFER_COUNT)
 {
     int i = 0;
 
-	/* create a dummy header with status 255 */
+	/* create a dummy header with status BF_DUMMY */
 	buffer *dummy_head = (buffer *) malloc(sizeof(buffer));
 	dummy_head->status = BF_DUMMY;
 	
@@ -62,13 +62,33 @@ void insert_end_free_list(buffer *head, buffer *node)
 	head->prev_Free_List = node;
 }
 
+void remove_free_list(buffer *node)
+{
+    /* if dummy header is passed, do nothing! */
+    if(node->status & BF_DUMMY) return;
+
+    node->status = status | BF_LOCKED;
+
+    node->next_Free_List->prev_Free_List = node->prev_Free_List;
+    node->prev_Free_List->next_Free_List = node->next_Free_List;    
+    node->prev_Free_List = NULL;
+    node->next_Free_List = NULL;
+}
+
+buffer *get_free_buffer(buffer *FREE_LIST)
+{
+    buffer *ptr = FREE_LIST->next_Free_List;
+    remove_free_list(ptr);
+    return ptr;
+}
+
 void print_free_list (buffer *head)
 {
 	buffer *ptr = head;
 	while(ptr->next_Free_List->status != BF_DUMMY)
 	{
 	    ptr = ptr->next_Free_List;
-		printf("%d:%d %s \n", ptr->logical_device_number, ptr->logical_block_number, ptr->data);		
+		printf("%d:%d %s \t", ptr->logical_device_number, ptr->logical_block_number, ptr->data);		
 	}
 }
 
