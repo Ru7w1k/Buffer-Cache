@@ -38,7 +38,7 @@ int main (int argc, char **argv)
 	FREE_LIST  = init_free_list  (BUFFER_CACHE, BUFFER_COUNT);
 	HASH_QUEUE = init_hash_queue (BUFFER_CACHE, BUFFER_COUNT, HASH_QUEUE_COUNT);
 	
-	/* CHECK LISTS ARE CREATED AS REQUIRED */
+	/* CHECK LISTS ARE CREATED AS REQUIRED 
 	
 	print_free_list(FREE_LIST);
 	print_hash_queue(&HASH_QUEUE[0]);
@@ -46,7 +46,11 @@ int main (int argc, char **argv)
 	
 	//**************************************/
 	
-	printf("\n--done--");
+	printf("Hash Queue for block 2014: %d \n", hash(0, 2014));
+	printf("Hash Queue for block    0: %d \n", hash(0, 0));
+	printf("Hash Queue for block 2021: %d \n", hash(0, 2021));		
+	
+	printf("\n -- done -- ");
 	return 0;	
 }
 
@@ -60,7 +64,7 @@ int main (int argc, char **argv)
  */
 buffer *getblk(unsigned int file_system_number, unsigned int block_number)
 {
-
+    
 }
 
 

@@ -6,12 +6,28 @@
 #ifndef HASH_QUEUE_H
 #define HASH_QUEUE_H
 
+int HASH_QUEUE_COUNT = 0;
+
+/* The HASH function 
+ * It returns block_number mod HASH_QUEUE_COUNT
+ * input1 : file system number
+ * input2 : logical block number
+ * output : index of appropriate HASH_QUEUE
+ */
+int hash(unsigned int file_system_number, unsigned int block_number)
+{
+    return block_number % HASH_QUEUE_COUNT;
+} 
+
+
 /*  Initialize a particular hash queues with appropriate buffers  
- *  input1 : pointer to BUFFER_CACHE, 
- *  input2 : pointer to DUMMY HEADER of HASH QUEUE,
+ *  input1 : pointer to BUFFER_CACHE
+ *  input2 : pointer to DUMMY HEADER of HASH QUEUE
+ *  input3 : index of hash queue to initialize
+ *  input4 : size of hash queue
  *  output : dummy header node for hash queue
  */
-void __init_hash_queue(buffer *BUFFER_CACHE, buffer *header, int HASH_QUEUE_INDEX, int HASH_QUEUE_SIZE, int HASH_QUEUE_COUNT)
+void __init_hash_queue(buffer *BUFFER_CACHE, buffer *header, int HASH_QUEUE_INDEX, int HASH_QUEUE_SIZE)
 {
     /* set status to BF_DUMMY */
     header->status = BF_DUMMY;
@@ -43,17 +59,18 @@ void __init_hash_queue(buffer *BUFFER_CACHE, buffer *header, int HASH_QUEUE_INDE
  *  input2 : number of buffers in BUFFER_CACHE
  *  output : dummy header node for hash queue
  */
-buffer *init_hash_queue(buffer *BUFFER_CACHE, int BUFFER_COUNT, int HASH_QUEUE_COUNT)
+buffer *init_hash_queue(buffer *BUFFER_CACHE, int BUFFER_COUNT, int COUNT)
 {
     int i = 0;
+    HASH_QUEUE_COUNT = COUNT;
     int HASH_QUEUE_SIZE = BUFFER_COUNT / HASH_QUEUE_COUNT;
     
-	/* create a dummy header with status 255 for list of hash queue headers */
+	/* create a dummy header for list of hash queue headers */
 	buffer *dummy_head = (buffer *) malloc(sizeof(buffer) * HASH_QUEUE_COUNT);
 
     for(i = 0; i < HASH_QUEUE_COUNT; i++)
     {
-        __init_hash_queue(BUFFER_CACHE, &dummy_head[i], i, HASH_QUEUE_SIZE, HASH_QUEUE_COUNT);
+        __init_hash_queue(BUFFER_CACHE, &dummy_head[i], i, HASH_QUEUE_SIZE);
     }
 
 	return dummy_head;
