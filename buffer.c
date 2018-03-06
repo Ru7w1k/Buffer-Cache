@@ -38,13 +38,13 @@ int main (int argc, char **argv)
 	FREE_LIST  = init_free_list  (BUFFER_CACHE, BUFFER_COUNT);
 	HASH_QUEUE = init_hash_queue (BUFFER_CACHE, BUFFER_COUNT, HASH_QUEUE_COUNT);
 	
-	/* CHECK LISTS ARE CREATED AS REQUIRED 
+	/* CHECK LISTS ARE CREATED AS REQUIRED */
 	
-	print_list(FREE_LIST);
+	print_free_list(FREE_LIST);
 	print_hash_queue(&HASH_QUEUE[0]);
 	print_hash_queue(&HASH_QUEUE[1]);
 	
-	**************************************/
+	//**************************************/
 	
 	printf("\n--done--");
 	return 0;	

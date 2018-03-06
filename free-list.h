@@ -17,7 +17,7 @@ buffer *init_free_list(buffer *BUFFER_CACHE, int BUFFER_COUNT)
 
 	/* create a dummy header with status 255 */
 	buffer *dummy_head = (buffer *) malloc(sizeof(buffer));
-	dummy_head->status = 255;
+	dummy_head->status = BF_DUMMY;
 	
 	/* link first and last buffer to dummy_head */
 	dummy_head->next_Free_List = &BUFFER_CACHE[0];
@@ -62,7 +62,7 @@ void insert_end_free_list(buffer *head, buffer *node)
 void print_free_list (buffer *head)
 {
 	buffer *ptr = head;
-	while(ptr->next_Free_List->status != 255)
+	while(ptr->next_Free_List->status != BF_DUMMY)
 	{
 	    ptr = ptr->next_Free_List;
 		printf("%d:%d %s \n", ptr->logical_device_number, ptr->logical_block_number, ptr->data);		

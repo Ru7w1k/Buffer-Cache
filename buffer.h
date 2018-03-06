@@ -3,6 +3,15 @@
 
 #define BUFFER_SIZE 1024
 
+/* Buffer States */
+
+#define BF_LOCKED 0b00000001
+#define BF_VALID  0b00000010
+#define BF_DWRITE 0b00000100
+#define BF_INIO   0b00001000
+#define BF_DEMAND 0b00010000
+#define BF_DUMMY  0b11100000
+
 /* A buffer structure with 1KB of data size */
 typedef struct buffer 
 {

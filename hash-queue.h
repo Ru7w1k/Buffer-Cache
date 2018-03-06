@@ -13,8 +13,8 @@
  */
 void __init_hash_queue(buffer *BUFFER_CACHE, buffer *header, int HASH_QUEUE_INDEX, int HASH_QUEUE_SIZE, int HASH_QUEUE_COUNT)
 {
-    /* set status to 255 */
-    header->status = 255;
+    /* set status to BF_DUMMY */
+    header->status = BF_DUMMY;
 
     /* Assign both pointers of dummy header */
     header->next_Hash_Queue = &BUFFER_CACHE[(HASH_QUEUE_COUNT * 0) + HASH_QUEUE_INDEX];
@@ -80,7 +80,7 @@ void insert_end_free_list(buffer *head, buffer *node)
 void print_hash_queue (buffer *head)
 {
 	buffer *ptr = head;
-	while(ptr->next_Hash_Queue->status != 255)
+	while(ptr->next_Hash_Queue->status != BF_DUMMY)
 	{
 	    ptr = ptr->next_Hash_Queue;
 		printf("%d:%d %s \n", ptr->logical_device_number, ptr->logical_block_number, ptr->data);		
