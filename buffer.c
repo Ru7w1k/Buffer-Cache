@@ -50,12 +50,29 @@ int main (int argc, char **argv)
 	printf("Hash Queue for block    0: %d \n", hash(0, 0));
 	printf("Hash Queue for block 2021: %d \n", hash(0, 2021));		
 	
-	******************************************************************/
+	/* Free List Function 
 	
 	print_free_list(FREE_LIST);
 	remove_free_list(FREE_LIST);
 	remove_free_list(FREE_LIST->next_Free_List);
 	print_free_list(FREE_LIST);
+	
+	/* Set Hash Queue Test  */
+	
+	printf("\nHash Queue 0: ");
+	print_hash_queue(&HASH_QUEUE[0]);
+	printf("\nHash Queue 1: ");
+	print_hash_queue(&HASH_QUEUE[1]);
+	
+	FREE_LIST->next_Free_List->logical_block_number = 1001;	
+	set_hash_queue(FREE_LIST->next_Free_List, HASH_QUEUE);
+	
+	printf("\nHash Queue 0: ");
+	print_hash_queue(&HASH_QUEUE[0]);
+	printf("\nHash Queue 1: ");
+	print_hash_queue(&HASH_QUEUE[1]);
+	
+	/************************************************************/
 	
 	printf("\n -- done -- ");
 	return 0;	

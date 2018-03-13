@@ -120,7 +120,7 @@ void print_hash_queue (buffer *head)
 	while(ptr->next_Hash_Queue->status != BF_DUMMY)
 	{
 	    ptr = ptr->next_Hash_Queue;
-		printf("%d:%d %s \n", ptr->logical_device_number, ptr->logical_block_number, ptr->data);		
+		printf("%d:%d %s \t", ptr->logical_device_number, ptr->logical_block_number, ptr->data);		
 	}
 }
 
