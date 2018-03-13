@@ -103,7 +103,14 @@ void insert_end_hash_queue(buffer *head, buffer *node)
  */
 void set_hash_queue(buffer *blk, buffer *HASH_QUEUE)
 {
+    /* calculate hash queue number */ 
     int hash_queue = hash(blk->logical_device_number, blk->logical_block_number);
+    
+    /* remove from old hash queue */
+    blk->prev_Hash_Queue->next_Hash_Queue = blk->next_Hash_Queue;
+    blk->next_Hash_Queue->prev_Hash_Queue = blk->prev_Hash_Queue;
+    
+    /* insert into new hash queue */
     insert_end_hash_queue(&HASH_QUEUE[hash_queue], blk);
 }
 
