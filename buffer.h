@@ -10,7 +10,8 @@
 #define BF_DWRITE 0b00000100
 #define BF_INIO   0b00001000
 #define BF_DEMAND 0b00010000
-#define BF_DUMMY  0b11100000
+#define BF_OLD    0b00100000
+#define BF_DUMMY  0b11000000
 
 /* A buffer structure with 1KB of data size */
 typedef struct buffer 

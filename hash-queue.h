@@ -75,17 +75,6 @@ buffer *init_hash_queue(buffer *BUFFER_CACHE, int BUFFER_COUNT, int COUNT)
 
 	return dummy_head;
 }
-
-/*
-void insert_head_free_list(buffer *head, buffer *node)
-{
-	node->next_Free_List = head->next_Free_List;
-	node->prev_Free_List = head;
-	head->next_Free_List->prev_Free_List = node;
-	head->next_Free_List = node;
-}
- 
- */
  
 void insert_end_hash_queue(buffer *head, buffer *node)
 {

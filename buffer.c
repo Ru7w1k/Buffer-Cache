@@ -57,21 +57,30 @@ int main (int argc, char **argv)
 	remove_free_list(FREE_LIST->next_Free_List);
 	print_free_list(FREE_LIST);
 	
-	/* Set Hash Queue Test  */
+	/* Set Hash Queue Test  
 	
 	printf("\nHash Queue 0: ");
 	print_hash_queue(&HASH_QUEUE[0]);
 	printf("\nHash Queue 1: ");
-	print_hash_queue(&HASH_QUEUE[1]);
+	print_hash_queue(&HASH_QUEUE[2]);
 	
-	FREE_LIST->next_Free_List->logical_block_number = 1001;	
+	FREE_LIST->next_Free_List->logical_block_number = 1002;	
 	set_hash_queue(FREE_LIST->next_Free_List, HASH_QUEUE);
 	
 	printf("\nHash Queue 0: ");
 	print_hash_queue(&HASH_QUEUE[0]);
 	printf("\nHash Queue 1: ");
-	print_hash_queue(&HASH_QUEUE[1]);
+	print_hash_queue(&HASH_QUEUE[2]);
 	
+	/* LOCK and UNLOCK buffer mechanism
+	
+	buffer *block = FREE_LIST->next_Free_List;
+	block->status |= BF_LOCKED;
+	block->status |= BF_VALID;
+	printf("%x ", block->status);
+	block->status &= (~BF_LOCKED);
+	printf("%x ", block->status);
+		
 	/************************************************************/
 	
 	printf("\n -- done -- ");
@@ -136,9 +145,29 @@ buffer *getblk(unsigned int file_system_number, unsigned int block_number)
             
             /* scenario 2 */
             set_hash_queue(blk, HASH_QUEUE);
+            blk->status |= BF_LOCKED;
             return(blk);
         }        
     }
 }
 
+/*
+ * brelse - release a locked buffer 
+ * input  - locked buffer
+ * output - none
+ */
+void brelse(buffer *block)
+{
+    /* wakeup: all who are waiting for any buffer to become free */
+    /* wakeup: all who are waiting for this buffer to become free */
+    
+    /* buffer is valid and is not old */
+    if ((block->status & BF_VALID) && !(block->status & BF_OLD))
+        insert_end_free_list (FREE_LIST, block);
+    else
+        insert_head_free_list(FREE_LIST, block);
+        
+    /* unlock buffer */
+    block->status &= (~BF_LOCKED);
+}
 
