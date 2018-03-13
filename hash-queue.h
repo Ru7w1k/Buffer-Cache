@@ -65,9 +65,9 @@ buffer *init_hash_queue(buffer *BUFFER_CACHE, int BUFFER_COUNT, int COUNT)
     HASH_QUEUE_COUNT = COUNT;
     int HASH_QUEUE_SIZE = BUFFER_COUNT / HASH_QUEUE_COUNT;
     
-	/* create a dummy header for list of hash queue headers */
-	buffer *dummy_head = (buffer *) malloc(sizeof(buffer) * HASH_QUEUE_COUNT);
-
+    /* create a dummy header for list of hash queue headers */
+    buffer *dummy_head = (buffer *) malloc(sizeof(buffer) * HASH_QUEUE_COUNT);
+    
     for(i = 0; i < HASH_QUEUE_COUNT; i++)
     {
         __init_hash_queue(BUFFER_CACHE, &dummy_head[i], i, HASH_QUEUE_SIZE);
