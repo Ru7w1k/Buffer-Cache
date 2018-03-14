@@ -83,7 +83,7 @@ int main (int argc, char **argv)
 		
 	/************************************************************/
 	
-	printf("\n -- done -- ");
+	printf("\n -- done -- \n");
 	return 0;	
 }
 

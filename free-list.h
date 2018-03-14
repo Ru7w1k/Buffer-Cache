@@ -16,7 +16,7 @@ buffer *init_free_list(buffer *BUFFER_CACHE, int BUFFER_COUNT)
     int i = 0;
 
 	/* create a dummy header with status BF_DUMMY */
-	buffer *dummy_head = (buffer *) malloc(sizeof(buffer));
+	buffer *dummy_head = /*(buffer *)*/ malloc(sizeof(buffer));
 	dummy_head->status = BF_DUMMY;
 	
 	/* link first and last buffer to dummy_head */
